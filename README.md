@@ -20,6 +20,12 @@ Create a `.gcloud-run-env-vars.yaml` to store the environment variables you want
 gcloud run deploy --source . --env-vars-file .gcloud-run-env-vars.yaml
 ```
 
+You can also specify the service name and region while running the command, like this:
+
+```bash
+gcloud run deploy my-service-name --source . --env-vars-file .gcloud-run-env-vars.yaml --region asia-northeast1
+```
+
 Example YAML content:
 
 ```yaml

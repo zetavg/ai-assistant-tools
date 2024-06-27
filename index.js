@@ -5,6 +5,7 @@ import express from 'express';
 import openAPI from './open-api/open-api.js';
 import addApp from './tools/add.js';
 import datetimeApp from './tools/datetime.js';
+import memoryApp from './tools/memory.js';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 
 app.use(datetimeApp);
 app.use(addApp);
+app.use(memoryApp);
 
 const port = parseInt(process.env.PORT) || 8080;
 
