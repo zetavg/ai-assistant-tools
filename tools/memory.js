@@ -30,7 +30,7 @@ router.post(
                 description: 'The information to remember.',
               },
             },
-            required: ['user_id', 'memory'],
+            required: ['memory'],
           },
         },
       },
@@ -38,16 +38,16 @@ router.post(
   }),
   async (req, res) => {
     try {
-      const { user_id, memory } = req.body || {};
+      const { user_id = 'default', memory } = req.body || {};
 
-      if (!user_id) {
-        return res.status(400).json({
-          error: '`user_id` is required.',
-          message: '`user_id` is required.',
-          details:
-            'This API expects the user_id, which is the ID of the user to remember information for, to be provided in the request body as JSON. For example: { "user_id": "123", "memory": "Remember this." }.',
-        });
-      }
+      // if (!user_id) {
+      //   return res.status(400).json({
+      //     error: '`user_id` is required.',
+      //     message: '`user_id` is required.',
+      //     details:
+      //       'This API expects the user_id, which is the ID of the user to remember information for, to be provided in the request body as JSON. For example: { "user_id": "123", "memory": "Remember this." }.',
+      //   });
+      // }
 
       if (!memory) {
         return res.status(400).json({
@@ -87,23 +87,23 @@ router.get(
         name: 'user_id',
         in: 'query',
         description: 'The ID of the user to retrieve memories for.',
-        required: true,
+        required: false,
         schema: { type: 'string' },
       },
     ],
   }),
   async (req, res) => {
     try {
-      const { user_id } = req.query || {};
+      const { user_id = 'default' } = req.query || {};
 
-      if (!user_id) {
-        return res.status(400).json({
-          error: '`user_id` is required.',
-          message: '`user_id` is required.',
-          details:
-            'This API expects the user_id, which is the ID of the user to retrieve memories for, to be provided in the query string. For example: /memories?user_id=abcd.',
-        });
-      }
+      // if (!user_id) {
+      //   return res.status(400).json({
+      //     error: '`user_id` is required.',
+      //     message: '`user_id` is required.',
+      //     details:
+      //       'This API expects the user_id, which is the ID of the user to retrieve memories for, to be provided in the query string. For example: /memories?user_id=abcd.',
+      //   });
+      // }
 
       const db = mongodbClient.db();
       const collection = db.collection('memories');
@@ -129,7 +129,7 @@ router.delete(
         name: 'user_id',
         in: 'query',
         description: 'The ID of the user whose memory is to be deleted.',
-        required: true,
+        required: false,
         schema: { type: 'string' },
       },
       {
@@ -143,7 +143,7 @@ router.delete(
   }),
   async (req, res) => {
     try {
-      const { user_id, memory_id } = req.query || {};
+      const { user_id = 'default', memory_id } = req.query || {};
 
       if (!user_id || !memory_id) {
         return res.status(400).json({
