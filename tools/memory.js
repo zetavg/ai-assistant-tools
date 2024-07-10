@@ -118,6 +118,50 @@ router.get(
   },
 );
 
+// API-based extension for Dify to retrieve memories
+// See: https://docs.dify.ai/guides/extension/api-based-extension
+router.post(
+  '/dify-get-memories',
+  openAPI.path({
+    operationId: 'get-memories',
+    description: 'Retrieve memories that have been saved for a user.',
+    parameters: [
+      {
+        name: 'user_id',
+        in: 'query',
+        description: 'The ID of the user to retrieve memories for.',
+        required: false,
+        schema: { type: 'string' },
+      },
+    ],
+  }),
+  async (req, res) => {
+    try {
+      const { point, params: { user_id = 'default' } = {} } = req.body || {};
+
+      switch (point) {
+        case 'ping': {
+          return res.status(200).json({ result: 'pong' });
+        }
+        default: {
+          const db = mongodbClient.db();
+          const collection = db.collection('memories');
+
+          const memories = await collection.find({ user_id }).toArray();
+          return res.status(200).json({
+            result: memories
+              .map((m) => `- [memory_id: ${m.memory_id}] ${m.memory}`)
+              .join('\n'),
+          });
+        }
+      }
+    } catch (error) {
+      console.error(`Error retrieving memory for user:`, error);
+      res.status(500).json({ error: 'Failed to save memory.' });
+    }
+  },
+);
+
 router.delete(
   '/memories',
   openAPI.path({
